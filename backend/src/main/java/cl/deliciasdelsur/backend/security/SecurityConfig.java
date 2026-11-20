@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/usuarios/**").hasRole("ADMINISTRADOR")
 
                         // Boletas / Órdenes
-                        .requestMatchers(HttpMethod.POST, "/api/v1/boletas/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/boletas/**").hasAnyRole("CLIENTE", "ADMINISTRADOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/boletas/mis-boletas").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/boletas/**").hasAnyRole("ADMINISTRADOR", "VENDEDOR")
 
