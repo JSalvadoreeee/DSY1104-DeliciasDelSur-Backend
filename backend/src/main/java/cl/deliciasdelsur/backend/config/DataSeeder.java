@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+// Carga datos de prueba al iniciar, solo si las tablas están vacías
 @Component
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
@@ -59,62 +60,67 @@ public class DataSeeder implements CommandLineRunner {
             usuarioRepository.saveAll(List.of(admin, vendedor, cliente));
         }
 
-        if (categoriaRepository.count() == 0) {
-            Categoria tortas = categoriaRepository.save(Categoria.builder()
-                    .nombre("Tortas y Pasteles")
-                    .descripcion("Repostería artesanal tradicional del sur de Chile")
+        if (categoriaRepository.count() == 0 && productoRepository.count() == 0) {
+            Categoria conservas = categoriaRepository.save(Categoria.builder()
+                    .nombre("Conservas")
+                    .descripcion("Mermeladas y verduras en conserva del sur de Chile")
                     .build());
 
-            Categoria chocolates = categoriaRepository.save(Categoria.builder()
-                    .nombre("Chocolatería")
-                    .descripcion("Chocolates artesanales con frutos del bosque")
+            Categoria salsas = categoriaRepository.save(Categoria.builder()
+                    .nombre("Salsas")
+                    .descripcion("Salsas caseras elaboradas con ingredientes frescos")
                     .build());
 
-            Categoria mermeladas = categoriaRepository.save(Categoria.builder()
-                    .nombre("Mermeladas y Conservas")
-                    .descripcion("Preparaciones caseras con frutas de temporada")
+            Categoria deshidratados = categoriaRepository.save(Categoria.builder()
+                    .nombre("Deshidratados")
+                    .descripcion("Frutas deshidratadas sin conservantes")
                     .build());
 
-            if (productoRepository.count() == 0) {
-                productoRepository.saveAll(List.of(
-                        Producto.builder()
-                                .nombre("Kuchen de Murta y Frambuesa")
-                                .descripcion("Masa quebrada artesanal rellena de murta silvestre y frambuesas frescas.")
-                                .precio(14990)
-                                .stock(15)
-                                .oferta(10)
-                                .imagenUrl("https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600")
-                                .categoria(tortas)
-                                .build(),
-                        Producto.builder()
-                                .nombre("Torta Selva Negra Sureña")
-                                .descripcion("Bizcocho de cacao húmedo con crema chantilly, guindas ácidas y virutas de chocolate.")
-                                .precio(22990)
-                                .stock(10)
-                                .oferta(0)
-                                .imagenUrl("https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600")
-                                .categoria(tortas)
-                                .build(),
-                        Producto.builder()
-                                .nombre("Caja Bombones Artesanales 16 un.")
-                                .descripcion("Surtido de bombones rellenos con manjar de campo, avellana chilena y calafate.")
-                                .precio(12500)
-                                .stock(25)
-                                .oferta(15)
-                                .imagenUrl("https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=600")
-                                .categoria(chocolates)
-                                .build(),
-                        Producto.builder()
-                                .nombre("Mermelada Casera de Rosa Mosqueta 450g")
-                                .descripcion("Receta tradicional patagónica 100% natural sin preservantes.")
-                                .precio(5490)
-                                .stock(30)
-                                .oferta(0)
-                                .imagenUrl("https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?w=600")
-                                .categoria(mermeladas)
-                                .build()
-                ));
-            }
+            productoRepository.saveAll(List.of(
+                    producto("Mermelada de Frutilla",
+                            "Mermelada artesanal de frutilla. Vida útil: 365 días.",
+                            2500, 40, 20,
+                            "https://osojimix.com/wp-content/uploads/2021/04/MERMELADA-DE-FRUTILLAS.jpg",
+                            conservas),
+                    producto("Mermelada de Durazno",
+                            "Mermelada artesanal de durazno. Vida útil: 365 días.",
+                            2300, 35, 0,
+                            "https://osojimix.com/wp-content/uploads/2022/01/Mermelada-de-duraznos-con-tagatosa-Pa%CC%81gina-500x500.jpg",
+                            conservas),
+                    producto("Salsa de Tomate",
+                            "Salsa de tomate casera. Vida útil: 180 días.",
+                            1800, 50, 17,
+                            "https://www.aceitesdeolivadeespana.com/wp-content/uploads/2021/05/Salsa-de-tomate-casera.jpg",
+                            salsas),
+                    producto("Choclo en Conserva",
+                            "Choclo tierno en conserva. Vida útil: 540 días.",
+                            1200, 60, 0,
+                            "https://www.wikihow.com/images_en/thumb/5/50/Store-Sweet-Corn-Step-16-Version-2.jpg/550px-nowatermark-Store-Sweet-Corn-Step-16-Version-2.jpg",
+                            conservas),
+                    producto("Arvejas en Conserva",
+                            "Arvejas en conserva. Vida útil: 540 días.",
+                            1100, 60, 0,
+                            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjgHRKaiUgwqqplO0kC9Hij4rTuj5bfzwQTCDa6Zmh8XZ46UY_hNNQSul3j73ruYonNK_X3bJuDvvFCK_CC8Z_VUMps_K9qhTn4f-3dGq1PVw1_0Ky7HFJQrktCeZbkQR4NaXMdYe00e6w/s1600/LATA+DE+ARVEJAS+VOLVANDO+A++PLATO.jpg",
+                            conservas),
+                    producto("Manzana Deshidratada",
+                            "Manzana deshidratada sin conservantes. Vida útil: 180 días.",
+                            3500, 25, 17,
+                            "https://deshidratadordealimentos.cl/wp-content/uploads/2020/05/manzanas-1024x683.jpg",
+                            deshidratados)
+            ));
         }
+    }
+
+    private Producto producto(String nombre, String descripcion, int precio, int stock,
+                              int oferta, String imagenUrl, Categoria categoria) {
+        return Producto.builder()
+                .nombre(nombre)
+                .descripcion(descripcion)
+                .precio(precio)
+                .stock(stock)
+                .oferta(oferta)
+                .imagenUrl(imagenUrl)
+                .categoria(categoria)
+                .build();
     }
 }
