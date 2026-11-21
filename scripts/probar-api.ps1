@@ -1,5 +1,5 @@
 # Pruebas de permisos y reglas de negocio contra el gateway (puerto 8080)
-$base = "http://localhost:8080/api/v1"
+$base = "http://localhost:8080/delicias/v1"
 $ok = 0
 $fallos = 0
 
@@ -38,6 +38,14 @@ $compra = '{"items":[{"productoId":1,"cantidad":1}]}'
 $compraExcesiva = '{"items":[{"productoId":1,"cantidad":99999}]}'
 
 Write-Host "--- Sin sesión ---"
+$rutaReal = $base.Replace("/delicias/v1", "/api/v1")
+try {
+    $codigoReal = [int](Invoke-WebRequest -UseBasicParsing -Method GET -Uri "$rutaReal/productos").StatusCode
+} catch {
+    $codigoReal = 0
+    if ($_.Exception.Response) { $codigoReal = [int]$_.Exception.Response.StatusCode.value__ }
+}
+Verificar "La ruta real /api/v1 no está expuesta en el gateway" 404 $codigoReal
 Verificar "Listar productos" 200 (Llamar "GET" "/productos" $null $null)
 Verificar "Listar categorías" 200 (Llamar "GET" "/categorias" $null $null)
 Verificar "Crear categoría sin token" 403 (Llamar "POST" "/categorias" $null '{"nombre":"X"}')

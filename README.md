@@ -5,7 +5,7 @@ API REST de la tienda Delicias del Sur, hecha con Java 21, Spring Boot 3, Spring
 ## Estructura
 
 - `backend/`: API REST (puerto 8081). Entidades, servicios, controladores, seguridad y pruebas unitarias.
-- `gateway/`: Spring Cloud Gateway (puerto 8080). Único punto de entrada: maneja el CORS y reenvía `/api/v1/**` al backend. El frontend solo conoce esta dirección.
+- `gateway/`: Spring Cloud Gateway (puerto 8080). Único punto de entrada: maneja el CORS y expone la ruta pública `/delicias/v1/**`, que traduce por dentro a `/api/v1/**` del backend. El frontend solo conoce esta dirección y esta ruta.
 - `scripts/probar-api.ps1`: pruebas de permisos y reglas de negocio contra el gateway.
 
 ## Arquitectura
@@ -31,7 +31,7 @@ Con MySQL encendido, en dos terminales distintas:
 
 La base `delicias_del_sur` se crea sola y el `DataSeeder` carga usuarios, categorías y productos si está vacía.
 
-Swagger UI: http://localhost:8080/swagger-ui.html (a través del gateway) o http://localhost:8081/swagger-ui.html.
+Swagger UI (solo local, directo al backend): http://localhost:8081/swagger-ui.html. No se expone a través del gateway.
 
 ## Variables de entorno
 
@@ -55,7 +55,7 @@ Swagger UI: http://localhost:8080/swagger-ui.html (a través del gateway) o http
 
 ## Endpoints y permisos
 
-Todas las rutas están versionadas bajo `/api/v1`.
+Las rutas del backend están versionadas bajo `/api/v1`. Desde el frontend se llaman como `/delicias/v1/...` a través del gateway (por ejemplo `/delicias/v1/productos`).
 
 | Ruta | Método | Quién puede |
 |---|---|---|

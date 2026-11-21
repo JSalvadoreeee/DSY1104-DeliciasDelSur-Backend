@@ -1,4 +1,4 @@
-# Gateway: único punto de entrada, maneja el CORS y reenvía al backend
+# Gateway: único punto de entrada, maneja el CORS y traduce la ruta pública a la del backend
 server:
   port: 8080
 
@@ -20,11 +20,9 @@ spring:
             allowedHeaders: "*"
             maxAge: 3600
       routes:
-        - id: api-v1
+        - id: tienda-api
           uri: ${BACKEND_URL:http://localhost:8081}
           predicates:
-            - Path=/api/v1/**
-        - id: documentacion
-          uri: ${BACKEND_URL:http://localhost:8081}
-          predicates:
-            - Path=/swagger-ui/**,/swagger-ui.html,/v3/api-docs/**
+            - Path=/delicias/v1/**
+          filters:
+            - RewritePath=/delicias/v1/?(?<segment>.*), /api/v1/$\{segment}
