@@ -2,19 +2,19 @@
 
 API REST de la tienda Delicias del Sur, hecha con Java 21, Spring Boot 3, Spring Security con JWT, MySQL y Swagger. El acceso desde el frontend pasa siempre por un API Gateway.
 
-## Estructura
+## Estructura del proyecto
 
 - `backend/`: API REST (puerto 8081). Entidades, servicios, controladores, seguridad y pruebas unitarias.
 - `gateway/`: Spring Cloud Gateway (puerto 8080). Único punto de entrada: maneja el CORS y expone la ruta pública `/delicias/v1/**`, que traduce por dentro a `/api/v1/**` del backend. El frontend solo conoce esta dirección y esta ruta.
 - `scripts/probar-api.ps1`: pruebas de permisos y reglas de negocio contra el gateway.
 
-## Arquitectura
+## Arquitectura del proyecto
 
     Frontend React (5173)  ->  Gateway (8080)  ->  Backend (8081)  ->  MySQL (3306)
 
 El backend no debe quedar expuesto públicamente: en el despliegue solo el gateway puede llegar al puerto 8081.
 
-## Requisitos
+## Requisitos del proyecto
 
 - Java 21
 - MySQL (Laragon en local: usuario `root`, sin contraseña, puerto 3306)
